@@ -1,12 +1,14 @@
 import ctypes
-from pypdfium2.raw import bindings
+import pathlib
+import pypdfium2_raw
 
 
-# Access the already-loaded pdfium library
-pdfium_lib = bindings._libs["pdfium"]
+# locate the libpdfium shared library shipped with pypdfium2
+lib_path = pathlib.Path(pypdfium2_raw.__file__).parent / "libpdfium.so"
+
+pdfium_lib = ctypes.CDLL(str(lib_path))
 
 
-# expose your function
 FPDFFormObj_RemoveObject = pdfium_lib.FPDFFormObj_RemoveObject
 
 FPDFFormObj_RemoveObject.argtypes = [
