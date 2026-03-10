@@ -1,8 +1,10 @@
 import ctypes
-import pypdfium2.raw as pdfium_raw
+from pypdfium2.raw import bindings
 
-# get the already-loaded pdfium library
-pdfium_lib = pdfium_raw._LIB
+
+# Access the already-loaded pdfium library
+pdfium_lib = bindings._libs["pdfium"]
+
 
 # expose your function
 FPDFFormObj_RemoveObject = pdfium_lib.FPDFFormObj_RemoveObject
