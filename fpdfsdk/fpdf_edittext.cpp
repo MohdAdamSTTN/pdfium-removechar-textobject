@@ -854,6 +854,8 @@ FPDFGlyphPath_GetGlyphPathSegment(FPDF_GLYPHPATH glyphpath, int index) {
 }
 
 
+extern "C" {
+
 FPDF_EXPORT void FPDF_CALLCONV
 FPDFTextObj_RemoveChars(FPDF_PAGEOBJECT text_object,
                         int start_index,
@@ -889,5 +891,7 @@ FPDFTextObj_RemoveChars(FPDF_PAGEOBJECT text_object,
   }
 
   text->SetText(new_text);
+}
+
 }
 
