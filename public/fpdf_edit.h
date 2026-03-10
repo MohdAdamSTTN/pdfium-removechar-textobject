@@ -1681,9 +1681,10 @@ FPDFFormObj_GetObject(FPDF_PAGEOBJECT form_object, unsigned long index);
 //
 // Ownership of the removed |page_object| is transferred to the caller.
 // Call FPDFPageObj_Destroy() on the removed page_object to free it.
-FPDF_EXPORT FPDF_BOOL FPDF_CALLCONV
-FPDFFormObj_RemoveObject(FPDF_PAGEOBJECT form_object,
-                         FPDF_PAGEOBJECT page_object);
+FPDF_EXPORT void FPDF_CALLCONV
+FPDFTextObj_RemoveChars(FPDF_PAGEOBJECT text_object,
+                        int start_index,
+                        int count);
 
 #ifdef __cplusplus
 }  // extern "C"

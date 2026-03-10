@@ -5,6 +5,8 @@
 // Original code copyright 2014 Foxit Software Inc. http://www.foxitsoftware.com
 
 #include "core/fpdfapi/page/cpdf_formobject.h"
+#include "core/fpdfapi/page/cpdf_formobject.h"
+#include "fpdfsdk/cpdfsdk_helpers.h"
 
 #include <utility>
 
@@ -49,3 +51,5 @@ void CPDF_FormObject::SetFormMatrix(const CFX_Matrix& matrix) {
   form_matrix_ = matrix;
   CalcBoundingBox();
 }
+
+

@@ -44,6 +44,10 @@
 #include "core/fxge/text_char_pos.h"
 #include "fpdfsdk/cpdfsdk_helpers.h"
 #include "public/fpdf_edit.h"
+#include "core/fpdfapi/page/cpdf_formobject.h"
+#include "fpdfsdk/cpdfsdk_helpers.h"
+#include "core/fpdfapi/page/cpdf_textobject.h"
+
 
 // These checks are here because core/ and public/ cannot depend on each other.
 static_assert(static_cast<int>(TextRenderingMode::MODE_UNKNOWN) ==
@@ -833,6 +837,7 @@ FPDFGlyphPath_CountGlyphSegments(FPDF_GLYPHPATH glyphpath) {
   return fxcrt::CollectionSize<int>(pPath->GetPoints());
 }
 
+
 FPDF_EXPORT FPDF_PATHSEGMENT FPDF_CALLCONV
 FPDFGlyphPath_GetGlyphPathSegment(FPDF_GLYPHPATH glyphpath, int index) {
   auto* pPath = CFXPathFromFPDFGlyphPath(glyphpath);
@@ -847,3 +852,42 @@ FPDFGlyphPath_GetGlyphPathSegment(FPDF_GLYPHPATH glyphpath, int index) {
 
   return FPDFPathSegmentFromFXPathPoint(&points[index]);
 }
+
+
+FPDF_EXPORT void FPDF_CALLCONV
+FPDFTextObj_RemoveChars(FPDF_PAGEOBJECT text_object,
+                        int start_index,
+                        int count) {
+
+  CPDF_TextObject* text =
+      CPDFTextObjectFromFPDFPageObject(text_object);
+
+  if (!text)
+    return;
+
+  const std::vector<uint32_t>& codes = text->GetCharCodes();
+  std::vector<uint32_t> new_codes(codes.begin(), codes.end());
+
+  int len = static_cast<int>(new_codes.size());
+
+  if (start_index < 0 || start_index >= len)
+    return;
+
+  int end = start_index + count;
+  if (end > len)
+    end = len;
+
+  new_codes.erase(new_codes.begin() + start_index,
+                  new_codes.begin() + end);
+
+  ByteString new_text;
+
+  RetainPtr<CPDF_Font> font = text->GetFont();
+
+  for (uint32_t c : new_codes) {
+    font->AppendChar(&new_text, c);
+  }
+
+  text->SetText(new_text);
+}
+
